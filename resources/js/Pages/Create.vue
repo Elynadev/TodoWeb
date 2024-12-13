@@ -1,4 +1,11 @@
 <template>
+    <AuthenticatedLayout>
+        <template #header>
+            <h2 class="text-xl font-semibold leading-tight text-gray-800">
+                MySECRET
+            </h2>
+        </template>
+
     <div class="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
       <h1 class="text-2xl font-semibold mb-4">Ajouter une Tâche</h1>
       <form @submit.prevent="submit">
@@ -42,9 +49,11 @@
         </button>
       </form>
     </div>
+</AuthenticatedLayout>
   </template>
 
   <script setup>
+  import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
   import { Inertia } from '@inertiajs/inertia';
 import { ref } from 'vue';
 

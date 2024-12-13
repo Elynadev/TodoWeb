@@ -1,4 +1,11 @@
 <template>
+    <AuthenticatedLayout>
+        <template #header>
+            <h2 class="text-xl font-semibold leading-tight text-gray-800">
+                MySECRET
+            </h2>
+        </template>
+>
     <div class="container mx-auto my-8 bg-gray-100 p-6 rounded-lg shadow-lg">
       <h1 class="text-3xl font-bold text-center text-blue-600 mb-6">Mes Tâches</h1>
       <div class="flex justify-between mb-4">
@@ -43,10 +50,12 @@
         </li>
       </ul>
     </div>
+</AuthenticatedLayout>
   </template>
 
   <script>
-  import { Inertia } from '@inertiajs/inertia';
+  import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { Inertia } from '@inertiajs/inertia';
 import Swal from 'sweetalert2';
 import { computed, ref } from 'vue';
 

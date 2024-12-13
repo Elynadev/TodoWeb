@@ -20,8 +20,8 @@
                         <li class="bg-blue-100 p-3 rounded-lg">
                             <h4 class="font-semibold">{{ $task->title }}</h4>
                             <p class="text-gray-600 text-sm">{{ $task->description }}</p>
-                            <span class="text-blue-500 text-xs">Échéance: {{ $task->due_date }}</span>
-                        
+                            <span class="text-blue-500 text-xs">Échéancee: {{ $task->due_date }}</span>
+
 
                         </li>
                     @empty

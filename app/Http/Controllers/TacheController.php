@@ -16,6 +16,20 @@ class TacheController extends Controller
         return Inertia::render('Index', ['taches' => $taches]);
     }
 
+    public function indexByStatus()
+    {
+        // Récupère les tâches groupées par statut
+        $tachesEnCours = Tache::where('statut', 'en cours')->get();
+        $tachesTerminees = Tache::where('statut', 'terminé')->get();
+        $tachesAReviser = Tache::where('statut', 'à réviser')->get();
+
+        return Inertia::render('IndexByStatus', [
+            'tachesEnCours' => $tachesEnCours,
+            'tachesTerminees' => $tachesTerminees,
+            'tachesAReviser' => $tachesAReviser,
+        ]);
+    }
+
     public function create()
     {
         return Inertia::render('Create');
@@ -27,11 +41,11 @@ class TacheController extends Controller
         $request->validate([
             'titre' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'statut' => 'required|string|in:en cours,terminé',
+            'statut' => 'required|string|in:en cours,terminé,à réviser',
             'date_limite' => 'required|date',
         ]);
 
-        // Création de la tâche sans l'ID utilisateur
+        // Création de la tâche
         Tache::create([
             'titre' => $request->titre,
             'description' => $request->description,
@@ -53,7 +67,7 @@ class TacheController extends Controller
         $request->validate([
             'titre' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'statut' => 'required|string|in:en cours,terminé',
+            'statut' => 'required|string|in:en cours,terminé,à réviser',
             'date_limite' => 'required|date',
         ]);
 
@@ -69,5 +83,10 @@ class TacheController extends Controller
         $tache->delete();
 
         return redirect()->route('taches.index')->with('success', 'Tâche supprimée avec succès.');
+    }
+
+    public function show()
+    {
+        return Inertia::render('Create');
     }
 }

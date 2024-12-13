@@ -83,10 +83,16 @@ Route::get('/', function () {
     return Inertia::render('Index'); // Ou une autre vue si nécessaire
 });
 
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/taches/status', [TacheController::class, 'indexByStatus'])->name('taches.indexByStatus');
+});
 // Routes pour gérer les tâches
 Route::middleware(['auth'])->group(function () {
-    Route::resource('taches', TacheController::class);
+    Route::resource('/taches', TacheController::class);
 });
+
 
 
 require __DIR__.'/auth.php';
