@@ -15,10 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->enum('status', ['en cours', 'terminé'])->default('en cours');
+            $table->enum('status', ['en_cours', 'terminee'])->default('en_cours');
             $table->date('due_date')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
+             $table->unsignedBigInteger('user_id')->nullable()->change();
         });
 
     }

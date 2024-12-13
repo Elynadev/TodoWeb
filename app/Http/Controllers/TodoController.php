@@ -10,35 +10,37 @@ class TodoController extends Controller
     // Afficher toutes les tâches
     public function index()
     {
-        $tasks = Task::all();
-        return view('tasks.index', compact('tasks'));
+        return Task::all();
     }
 
     // Afficher le formulaire pour ajouter une tâche
     public function create()
     {
-        return view('tasks.create');
+
     }
 
     // Enregistrer une nouvelle tâche
     public function store(Request $request)
     {
-        $request->validate([
+        // Validation
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'status' => 'required|in:en cours,terminé',
-            'due_date' => 'required|date',
+            'status' => 'required|in:en_cours,terminee',
+            'due_date' => 'required|date|after_or_equal:today',
         ]);
 
-        Task::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'status' => $request->status,
-            'due_date' => $request->due_date,
-            'user_id' => auth()->id(), // Assumer que l'utilisateur est authentifié
-        ]);
+        // Enregistrer la tâche
+        $task = Task::create($validated);
+        return response()->json($task, 201);
 
-        return redirect()->route('tasks.index')->with('success', 'Tâche ajoutée avec succès.');
+        // Création de la tâche
+        Task::create($validated);
+
+        dd($request->status);
+
+        // Redirection avec un message de succès
+        return redirect()->route('tasks.create')->with('success', 'La tâche a été créée avec succès.');
     }
 
     // Afficher le formulaire pour modifier une tâche

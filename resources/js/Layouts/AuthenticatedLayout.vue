@@ -39,7 +39,7 @@ const showingNavigationDropdown = ref(false);
                                 </NavLink>
 
                                 <NavLink
-                                :href="route('dashboard')"
+                                :href="route('tasks.index')"
                                 :active="route().current('dashboard')"
                             >
                                 Mes Notes
@@ -162,6 +162,14 @@ const showingNavigationDropdown = ref(false);
                             :active="route().current('dashboard')"
                         >
                             Dashboard
+                        </ResponsiveNavLink>
+
+                        v class="space-y-1 pb-3 pt-2">
+                        <ResponsiveNavLink
+                            :href="route('tasks.index')"
+                            :active="route().current('Mes notes')"
+                        >
+                          Mes Notes
                         </ResponsiveNavLink>
                     </div>
 
