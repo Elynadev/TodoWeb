@@ -78,11 +78,6 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-// Route de la page d'accueil (facultatif)
-Route::get('/', function () {
-    return Inertia::render('Index'); // Ou une autre vue si nécessaire
-});
-
 
 
 Route::middleware(['auth'])->group(function () {
@@ -94,5 +89,8 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
+// Route::get('/send-email', TacheController::class);
+Route::get('/send-email', [TacheController::class, 'sendEmail']);
 
 require __DIR__.'/auth.php';
+

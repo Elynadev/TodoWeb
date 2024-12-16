@@ -2,15 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SimpleMail;
+use App\Mail\TacheRappel;
+use App\Mail\TaskReminder;
 use App\Models\Tache;
+use App\Notifications\TaskReminderNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Response;
 
 class TacheController extends Controller
 {
     public function index()
     {
-        // Récupère toutes les tâches
+
+        // $taches = Tache::paginate(4);
+        // // Récupère toutes les tâches
         $taches = Tache::all();
 
         return Inertia::render('Index', ['taches' => $taches]);
@@ -56,37 +64,116 @@ class TacheController extends Controller
         return redirect()->route('taches.index')->with('success', 'Tâche ajoutée avec succès.');
     }
 
-    public function edit(Tache $tache)
+
+    // Afficher le formulaire de modification
+    public function edit($id)
     {
-        return Inertia::render('Edit', ['tache' => $tache]);
+        $tache = Tache::find($id);
+
+        if (!$tache) {
+            return redirect()->route('taches.index')->with('error', 'Tâche non trouvée');
+        }
+
+        return Inertia::render('Taches/Edit', [
+            'tache' => $tache,
+        ]);
     }
 
-    public function update(Request $request, Tache $tache)
+    // Mettre à jour la tâche
+    public function update(Request $request, $id)
     {
-        // Validation des données entrantes
+        $tache = Tache::find($id);
+
+        if (!$tache) {
+            return redirect()->route('taches.index')->with('error', 'Tâche non trouvée');
+        }
+
+        // Validation des données
         $request->validate([
             'titre' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'statut' => 'required|string|in:en cours,terminé,à réviser',
-            'date_limite' => 'required|date',
+            'statut' => 'required|string|max:50',
+            'date_limite' => 'nullable|date',
         ]);
 
         // Mise à jour de la tâche
         $tache->update($request->all());
 
-        return redirect()->route('taches.index')->with('success', 'Tâche mise à jour avec succès.');
+        // Redirection vers l'index avec message de succès
+        return redirect()->route('taches.index')->with('success', 'Tâche mise à jour avec succès');
     }
+// Méthode pour supprimer une tâche
 
-    public function destroy(Tache $tache)
+    // Méthode pour supprimer une tâche
+    public function destroy($id)
     {
-        // Suppression de la tâche
+        // Trouver la tâche par ID
+        $tache = Tache::find($id);
+
+        if (!$tache) {
+            return redirect()->route('taches.index')->with('error', 'Tâche non trouvée');
+        }
+
+        // Supprimer la tâche
         $tache->delete();
 
-        return redirect()->route('taches.index')->with('success', 'Tâche supprimée avec succès.');
+        // Retourner une redirection vers la page d'index avec un message de succès
+        return redirect()->route('taches.index')->with('success', 'Tâche supprimée avec succès');
     }
 
     public function show()
     {
         return Inertia::render('Create');
     }
+
+    public function sendEmail()
+    {
+        $message = "Bonjour d'ab!";
+        Mail::to('recipient@example.com')->send(new SimpleMail($message));
+
+        return 'Email envoyé!';
+    }
+
+    public function testReminder()
+    {
+        $tasks = Tache::where('date_limite', '=', now()->addDay())->get();
+
+        foreach ($tasks as $task) {
+            $task->user->notify(new TaskReminderNotification($task));
+        }
+
+        return 'Rappels envoyés!';
+    }
+
+    public function sendReminder()
+    {
+        // Récupérer les tâches dont la date limite est demain
+        $tasks = Tache::where('date_limite', '=', now()->addDay())->get();
+
+        foreach ($tasks as $task) {
+            // Envoyer l'e-mail de rappel
+            Mail::to($task->user->email)->send(new TaskReminder($task));
+        }
+
+        return 'Rappels envoyés!';
+    }
+
+
+
+
+
+    public function envoyerRappel($id)
+    {
+        // Récupérer la tâche depuis la base de données
+        $tache = Tache::findOrFail($id);
+
+        // Envoyer l'e-mail
+        Mail::to('destinataire@example.com') // Remplace par l'adresse e-mail du destinataire
+            ->send(new TacheRappel($tache));
+
+        return response()->json([
+            'message' => 'Rappel envoyé avec succès !'
+        ]);
+    }
+
 }

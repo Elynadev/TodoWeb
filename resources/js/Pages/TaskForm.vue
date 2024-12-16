@@ -5,13 +5,14 @@
         <select v-model="status">
             <option value="en_cours">En cours</option>
             <option value="termine">Terminé</option>
+
         </select>
-        <input type="date" v-model="deadline" required />
-        <button type="submit">Ajouter Tâche</button>
+
     </form>
 </template>
 
 <script setup>
+import Swal from 'sweetalert2';
 import { defineEmits, ref } from 'vue';
 
 const emit = defineEmits();
@@ -39,5 +40,22 @@ const addTask = async () => {
     status.value = 'en_cours';
     deadline.value = '';
     emit('task-added');
-};
+
+
+
+
+// Afficher une alerte SweetAlert2
+Swal.fire({
+    title: 'Succès !',
+    text: 'La tâche a été créée avec succès.',
+    icon: 'success',
+    confirmButtonText: 'OK',
+    timer: 3000,
+    timerProgressBar: true,
+});
+}
+
+
+
+
 </script>
