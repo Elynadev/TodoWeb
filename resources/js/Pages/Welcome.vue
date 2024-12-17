@@ -28,14 +28,14 @@ function handleImageError() {
 
 <template>
     <Head title="Welcome" />
-    <div class="bg-red-50 text-black/50 dark:bg-black dark:text-red/50">
+    <div class="bg-red-50 text-white/50 dark:bg-black dark:text-red/50">
         <div class="relative flex min-h-screen flex-col items-center selection:bg-[#FF2D20] selection:text-white">
             <div class="relative w-full max-w-2xl px-6 lg:max-w-7xl">
                 <header class= "py-2 bg-red-500 text-white text-center gap-2  lg:grid-cols-3">
                     <div class="flex lg:col-start-2 lg:justify-center">
                         <h2 class="text-xl  text-white-500 font-semibold">MySECRET</h2>
                     </div>
-                    <nav v-if="canLogin" class="-mx-3 flex flex-1 justify-end">
+                    <nav v-if="canLogin" class="-mx-2 flex flex-1 justify-end">
                         <Link
                             v-if="$page.props.auth.user"
                             :href="route('dashboard')"
